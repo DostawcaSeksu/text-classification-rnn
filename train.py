@@ -11,13 +11,14 @@ import json
 from tune_pytorch import SentimentLSTM
 
 print('Loading data and best hyperparameters...')
-X = np.load('data/processed_X.npy')
-y = np.load('data/processed_y.npy')
+DATA_PATH = 'data/'
+X = np.load(DATA_PATH + 'processed_X.npy')
+y = np.load(DATA_PATH + 'processed_y.npy')
 
-with open('word_to_idx.pickle', 'rb') as handle:
+with open(DATA_PATH + 'word_to_idx.pickle', 'rb') as handle:
     word_to_idx = pickle.load(handle)
 
-with open('best_params.json', 'r') as f:
+with open(DATA_PATH + 'best_params.json', 'r') as f:
     best_params = json.load(f)
 
 print(best_params)

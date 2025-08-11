@@ -4,3 +4,5 @@
 *.pickle
 *.log
 *.json
+*.pth
+*.pyc
