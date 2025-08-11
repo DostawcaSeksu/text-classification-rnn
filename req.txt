@@ -2,3 +2,5 @@ pandas
 nltk
 numpy
 collections
+scikit-learn
+optuna
