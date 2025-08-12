@@ -19,7 +19,7 @@ def main():
     df.dropna(subset=[TEXT_COLUMN_NAME, LABEL_COLUMN_NAME], inplace=True)
 
     sentences = df[TEXT_COLUMN_NAME].apply(
-        lambda msg: word_tokenize(re.sub(r'^a-zA-Zа-яА-Я\s', '', str(msg).lower()))
+        lambda msg: word_tokenize(re.sub(r'[^a-zA-Zа-яА-Я\s]', '', str(msg).lower()))
     ).tolist()
 
     label_map = {'Neutral': 0, 'Positive': 1, 'Negative': 2}
