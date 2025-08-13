@@ -1,0 +1,8 @@
+{
+    "embedding_dim": 256,
+    "hidden_dim": 256,
+    "n_layers": 1,
+    "lr": 0.0011198390085146272,
+    "optimizer": "RMSprop",
+    "batch_size": 128
+}

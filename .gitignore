@@ -3,6 +3,5 @@
 *.npy
 *.pickle
 *.log
-*.json
 *.pth
 *.pyc
