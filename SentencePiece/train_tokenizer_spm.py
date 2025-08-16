@@ -18,8 +18,10 @@ def prepare_corpus(input_csv, text_column, output_txt):
 
         return True
     except FileNotFoundError:
+        print(f"Error: File '{input_csv}' not found.")
         return False
     except KeyError:
+        print(f"Error: column '{text_column}' not found in file. Check the name and try again.")
         return False
     
 def train_spm_tokenizer(corpus_file, model_prefix, vocab_size, model_type='bpe'):
