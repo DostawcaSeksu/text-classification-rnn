@@ -5,11 +5,11 @@ import json
 import os
 
 def main():
-    MODEL_PATH = os.path.join('model', 'word2vec_dota_chat.model')
-    DATA_FOLDER = 'data'
+    MODEL_PATH = os.path.join('../w2v-model', 'word2vec_dota_chat.model')
+    DATA_FOLDER = '../data/'
     KEYWORDS_PATH = os.path.join(DATA_FOLDER, 'seed_keywords.json')
     INPUT_FILE_PATH = os.path.join(DATA_FOLDER, 'chat.csv')
-    OUTPUT_FILE_PATH = os.path.join(DATA_FOLDER, 'chat_labeled_smart.csv')
+    OUTPUT_FILE_PATH = 'chat_labeled_smart.csv'
     TEXT_COLUMN_NAME = 'key'
 
     print(f'Loading model from {MODEL_PATH}...')
