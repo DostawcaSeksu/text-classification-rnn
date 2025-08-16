@@ -3,7 +3,18 @@ import sentencepiece as spm
 import os
 
 def main():
-    return
+    DATA_FOLDER = '../data/'
+    INPUT_CSV = os.path.join(DATA_FOLDER, 'chat.csv')
+    TEXT_COLUMN = 'key'
+
+    CORPUS_TXT = os.path.join(DATA_FOLDER, 'chat_corpus.txt')
+
+    MODEL_PREFIX = 'dota_chat_bpe'
+    VOCAB_SIZE = 8000
+
+    if prepare_corpus(INPUT_CSV, TEXT_COLUMN, CORPUS_TXT):
+        train_spm_tokenizer(CORPUS_TXT, MODEL_PREFIX, VOCAB_SIZE)
+        test_tokenizer(MODEL_PREFIX)
 
 def prepare_corpus(input_csv, text_column, output_txt):
     print(f'Loading data from "{input_csv}"...')

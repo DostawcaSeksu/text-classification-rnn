@@ -5,3 +5,4 @@
 *.log
 *.pth
 *.pyc
+data/chat_corpus.txt
