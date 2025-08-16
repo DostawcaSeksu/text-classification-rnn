@@ -3,7 +3,7 @@ import numpy as np
 import sentencepiece as spm
 
 def main():
-    INPUT_FILE_PATH = 'data/chat_labeled_smart.csv'
+    INPUT_FILE_PATH = '../data/chat_labeled_smart.csv'
     TEXT_COLUMN_NAME = 'key'
     LABEL_COLUMN_NAME = 'sentiment'
     TOKENIZER_MODEL_PATH = 'dota_chat_bpe.model' 
@@ -50,8 +50,8 @@ def main():
     padded_sequence = padded_sequences[idx_to_check]
     print(f'Padded sequence (length {len(padded_sequence)}):\n{padded_sequence}')
     
-    np.save('data/processed_X_spm.npy', padded_sequences)
-    np.save('data/processed_y_spm.npy', labels)
+    np.save('processed_X_spm.npy', padded_sequences)
+    np.save('processed_y_spm.npy', labels)
     print("\nData saved successfully.")
 
 
