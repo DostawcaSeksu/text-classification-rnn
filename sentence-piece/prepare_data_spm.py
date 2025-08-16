@@ -3,7 +3,7 @@ import numpy as np
 import sentencepiece as spm
 
 def main():
-    INPUT_FILE_PATH = '../data/chat_labeled_smart.csv'
+    INPUT_FILE_PATH = 'chat_labeled_smart.csv'
     TEXT_COLUMN_NAME = 'key'
     LABEL_COLUMN_NAME = 'sentiment'
     TOKENIZER_MODEL_PATH = 'dota_chat_bpe.model' 
