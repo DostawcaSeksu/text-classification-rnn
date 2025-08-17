@@ -91,8 +91,7 @@ def main():
                                               'Negative']))
 
     FINAL_MODEL_PATH = 'dota_sentiment_lstm_spm.pth'
-    torch.save(final_model.state_dict(),
-               FINAL_MODEL_PATH)
+    torch.save(final_model.state_dict(), FINAL_MODEL_PATH)
     print(f'\nThe final model is saved in "{FINAL_MODEL_PATH}"')
 
 class SentimentLSTM(nn.Module):
