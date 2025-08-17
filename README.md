@@ -58,7 +58,8 @@ This will generate `chat_labeled_smart.csv`, `processed_X_spm.npy`, `processed_y
 ### 3. Find the Best Hyperparameters
 Run the Optuna optimization script. **This is a long process.**
 ```bash
-python tune_lstm.py```
+python tune_lstm.py
+```
 This will create a `best_params_spm.json` file.
 
 ### 4. Train and Evaluate the Final Model
