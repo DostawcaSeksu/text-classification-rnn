@@ -1,6 +1,4 @@
-import pandas as pd
 import numpy as np
-import pickle
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -11,28 +9,33 @@ import optuna
 from functools import partial
 import logging
 import sys
+import sentencepiece as spm
 import json
 
 def main():
     logger = setup_logging()
     
-    DATA_PATH = 'data/'
-    logger.info('Loading preprocessed data...')
-    X = np.load(DATA_PATH + 'processed_X.npy')
-    y = np.load(DATA_PATH + 'processed_y.npy')
+    logger.info('Loading preprocessed data (SPM)...')
+    X = np.load('processed_X_spm.npy')
+    y = np.load('processed_y_spm.npy')
     
-    with open('word_to_idx.pickle', 'rb') as handle:
-        word_to_idx = pickle.load(handle)
+    TOKENIZER_MODEL_PATH = 'dota_chat_bpe.model'
+    try:
+        sp = spm.SentencePieceProcessor()
+        sp.Load(TOKENIZER_MODEL_PATH)
+        VOCAB_SIZE = sp.GetPieceSize()
+    except Exception as e:
+        logger.error(f"Error: Failed loading tokenizer {e}")
+        exit()
 
-    VOCAB_SIZE = len(word_to_idx)
     NUM_CLASSES = len(np.unique(y))    
-    logger.info(f'Vocab size: {VOCAB_SIZE}, Number of classes: {NUM_CLASSES}')
+    logger.info(f'Vocab size from SPM: {VOCAB_SIZE}, Number of classes: {NUM_CLASSES}')
 
-    X_train_val, _, y_train_val, _ = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+    X_train_val, X_test, y_train_val, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
     X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, test_size=0.25, random_state=42, stratify=y_train_val)
     
-    train_data = TensorDataset(torch.from_numpy(X_train), torch.from_numpy(y_train))
-    val_data = TensorDataset(torch.from_numpy(X_val), torch.from_numpy(y_val))
+    train_data = TensorDataset(torch.from_numpy(X_train), torch.from_numpy(y_train).long())
+    val_data = TensorDataset(torch.from_numpy(X_val), torch.from_numpy(y_val).long())
 
     logger.info('\nStarting to Find the Best Hyperparameters with Optuna...')
     
@@ -42,19 +45,19 @@ def main():
     optuna.logging.disable_default_handler()
     
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective_with_data, n_trials=30)
+    study.optimize(objective_with_data, n_trials=15)
     
-    logger.info('\n--- Results of Optuna search ---')
+    logger.info('\n--- Results of Optuna search (SPM) ---')
     best_trial = study.best_trial
     logger.info(f'Best accuracy: {best_trial.value:.2%}')
     logger.info('Best hyperparams: ')
     for key, value in best_trial.params.items():
         logger.info(f'    {key}: {value}')
         
-    BEST_PARAMS_FILE = 'best_params.json'
+    BEST_PARAMS_FILE = 'best_params_spm.json'
     with open(BEST_PARAMS_FILE, 'w') as f:
         json.dump(best_trial.params, f, indent=4)
-    logger.info(f"\nBest hyperparams was saved in '{BEST_PARAMS_FILE}'")
+    logger.info(f"\nBest params saved in '{BEST_PARAMS_FILE}'")
 
 def setup_logging():
     logger = logging.getLogger()
@@ -88,11 +91,11 @@ class SentimentLSTM(nn.Module):
     
 def objective(trial, train_dataset, val_dataset, vocab_size, num_classes):
     embedding_dim = trial.suggest_categorical('embedding_dim', [64, 128, 256])
-    hidden_dim = trial.suggest_categorical('hidden_dim', [128, 256, 512])
+    hidden_dim = trial.suggest_categorical('hidden_dim', [128, 256])
     n_layers = trial.suggest_int('n_layers', 1, 2)
     lr = trial.suggest_float('lr', 1e-4, 1e-2, log=True)
     optimizer_name = trial.suggest_categorical('optimizer', ['Adam', 'RMSprop'])
-    batch_size = trial.suggest_categorical('batch_size', [32, 64, 128])
+    batch_size = trial.suggest_categorical('batch_size', [64, 128])
 
     train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=False)

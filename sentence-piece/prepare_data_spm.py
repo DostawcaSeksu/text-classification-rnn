@@ -21,7 +21,7 @@ def main():
     try:
         sp = spm.SentencePieceProcessor()
         sp.load(TOKENIZER_MODEL_PATH)
-        VOCAB_SIZE = sp.get_piece_size()
+        VOCAB_SIZE = sp.GetPieceSize()
         print(f'Tokenizer loaded successfully. Vocab size: {VOCAB_SIZE}')
     except Exception as e:
         print(f'Error: Failed to load tokenizer model. {e}')
@@ -33,7 +33,7 @@ def main():
     labels = df['sentiment_id'].astype(int).values
 
     print('\nText vectorization with SentencePiece...')
-    sequences = df[TEXT_COLUMN_NAME].apply(lambda text: sp.encode_as_ids(str(text))).tolist()
+    sequences = df[TEXT_COLUMN_NAME].apply(lambda text: sp.EncodeAsIds(str(text))).tolist()
     
     print('Padding...')
     padded_sequences = np.zeros((len(sequences), MAX_LENGTH), dtype=np.int64)
