@@ -4,3 +4,4 @@ numpy
 collections
 scikit-learn
 optuna
+sentencepiece
